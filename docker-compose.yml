@@ -1,0 +1,179 @@
+services:
+  api-gateway:
+    build:
+      context: .
+      dockerfile: api-gateway/Dockerfile
+    container_name: esports12-api-gateway
+    env_file: .env
+    ports:
+      - "8680:8600"
+    depends_on:
+      - tournament-service
+      - match-service
+      - interaction-service
+      - stats-service
+      - team-service
+      - notification-service
+      - streaming-service
+    networks: [esports12-net]
+
+  tournament-service:
+    build:
+      context: .
+      dockerfile: tournament-service/Dockerfile
+    container_name: esports12-tournament
+    env_file: .env
+    ports:
+      - "8601:8601"
+    depends_on:
+      - redis
+      - rabbitmq
+    networks: [esports12-net]
+
+  match-service:
+    build:
+      context: .
+      dockerfile: match-service/Dockerfile
+    container_name: esports12-match
+    env_file: .env
+    ports:
+      - "8602:8602"
+    depends_on:
+      - redis
+      - rabbitmq
+    networks: [esports12-net]
+
+  interaction-service:
+    build:
+      context: .
+      dockerfile: interaction-service/Dockerfile
+    container_name: esports12-interaction
+    env_file: .env
+    ports:
+      - "8603:8603"
+    depends_on:
+      - rabbitmq
+    networks: [esports12-net]
+
+  stats-service:
+    build:
+      context: .
+      dockerfile: stats-service/Dockerfile
+    container_name: esports12-stats
+    env_file: .env
+    ports:
+      - "8604:8604"
+    depends_on:
+      - postgres
+      - influxdb
+      - redis
+    networks: [esports12-net]
+
+  team-service:
+    build:
+      context: .
+      dockerfile: team-service/Dockerfile
+    container_name: esports12-team
+    env_file: .env
+    ports:
+      - "8605:8605"
+    depends_on:
+      - postgres
+      - redis
+    networks: [esports12-net]
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: notification-service/Dockerfile
+    container_name: esports12-notification
+    env_file: .env
+    ports:
+      - "8606:8606"
+    depends_on:
+      - rabbitmq
+    networks: [esports12-net]
+
+  streaming-service:
+    build:
+      context: .
+      dockerfile: streaming-service/Dockerfile
+    container_name: esports12-streaming
+    env_file: .env
+    ports:
+      - "8607:8607"
+    depends_on:
+      - redis
+      - mosquitto
+    networks: [esports12-net]
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: esports12-frontend
+    env_file: .env
+    ports:
+      - "5182:5182"
+    depends_on:
+      - api-gateway
+    networks: [esports12-net]
+
+  postgres:
+    image: postgres:16
+    container_name: esports12-postgres
+    environment:
+      POSTGRES_DB: esports
+      POSTGRES_USER: esports
+      POSTGRES_PASSWORD: esports
+    ports:
+      - "55447:5432"
+    volumes:
+      - esports12_postgres_data:/var/lib/postgresql/data
+    networks: [esports12-net]
+
+  influxdb:
+    image: influxdb:2.7
+    container_name: esports12-influxdb
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: admin
+      DOCKER_INFLUXDB_INIT_PASSWORD: adminadmin
+      DOCKER_INFLUXDB_INIT_ORG: esports
+      DOCKER_INFLUXDB_INIT_BUCKET: telemetry
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: esports-token
+    ports:
+      - "31009:8086"
+    volumes:
+      - esports12_influxdb_data:/var/lib/influxdb2
+    networks: [esports12-net]
+
+  redis:
+    image: redis:7
+    container_name: esports12-redis
+    ports:
+      - "6392:6379"
+    networks: [esports12-net]
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: esports12-rabbitmq
+    ports:
+      - "5683:5672"
+      - "15683:15672"
+    networks: [esports12-net]
+
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: esports12-mqtt
+    ports:
+      - "1892:1883"
+    networks: [esports12-net]
+
+networks:
+  esports12-net:
+    driver: bridge
+
+volumes:
+  esports12_postgres_data:
+  esports12_influxdb_data:
