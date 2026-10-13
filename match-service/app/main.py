@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
 from typing import Any
@@ -133,7 +133,9 @@ async def update_status(match_id: str, request: MatchStatusUpdateRequest) -> dic
 
 
 @app.post("/matches/{match_id}/result/ingest")
-async def ingest_result(match_id: str, score_team_a: int, score_team_b: int, actor_role: Role = Role.ORGANIZER) -> dict[str, Any]:
+async def ingest_result(
+    match_id: str, score_team_a: int, score_team_b: int, actor_role: Role = Role.ORGANIZER
+) -> dict[str, Any]:
     _assert_permission(actor_role, "match:manage")
     match = matches.get(match_id)
     if match is None:

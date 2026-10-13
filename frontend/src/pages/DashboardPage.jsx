@@ -78,7 +78,7 @@ async function finishMatch(matchId, userId) {
 export function DashboardPage() {
   const [arenaId, setArenaId] = useState("ARENA-DEMO");
   const [userId, setUserId] = useState("USR-ORG-1");
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState("dark");
   const [status, setStatus] = useState("loading");
   const [error, setError] = useState(null);
   const [dashboard, setDashboard] = useState(emptyDashboard);
@@ -135,7 +135,7 @@ export function DashboardPage() {
       return "loading";
     }
     if (status === "failed") {
-      return "fallback";
+      return "Service unavailable";
     }
     return "live";
   }, [status]);
@@ -153,7 +153,7 @@ export function DashboardPage() {
       <header className="hero">
         <div className="hero-copy">
           <p className="eyebrow">eSports Arena</p>
-          <h1>Online tournament control center for matches, streams, stats, and fan interaction.</h1>
+          <h1>Tournament control</h1>
           <p className="sub">
             Run the full match workflow: schedule and start games, launch streams, collect live statistics,
             and trigger fan notifications in one place.
@@ -181,7 +181,7 @@ export function DashboardPage() {
             <button className="ghost" onClick={refresh}>Refresh</button>
             <button className="ghost" onClick={() => setTheme((current) => (current === "light" ? "dark" : "light"))}>Theme</button>
           </div>
-          <p className="status-line">Status: {statusLabel}</p>
+          <p className="status-line" role="status" aria-live="polite">Status: {statusLabel}</p>
         </div>
       </header>
 
@@ -212,7 +212,7 @@ export function DashboardPage() {
         />
       </section>
 
-      {error ? <div className="error-banner">{error}</div> : null}
+      {error ? <div className="error-banner" role="alert">{error}</div> : null}
 
       <section className="content-grid">
         <article className="panel panel-featured">

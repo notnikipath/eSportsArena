@@ -1,4 +1,4 @@
-﻿# eSports Arena
+# eSports Arena
 
 eSports Arena is a microservice platform for organizing online esports tournaments with full workflow support: team onboarding, match lifecycle, streaming, fan interaction, and statistics.
 
@@ -34,7 +34,7 @@ eSports Arena is a microservice platform for organizing online esports tournamen
 ## Run locally
 
 ```bash
-cd 'your/project/folder'
+cd eSportsArena
 docker compose up --build -d
 ```
 

@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
 from typing import Any
@@ -99,7 +99,9 @@ challenges: dict[str, TwoFactorChallenge] = {}
 audit_log: list[dict[str, Any]] = []
 
 
-def _audit(actor_id: str, actor_role: Role | str, action: str, object_id: str, details: dict[str, Any] | None = None) -> None:
+def _audit(
+    actor_id: str, actor_role: Role | str, action: str, object_id: str, details: dict[str, Any] | None = None
+) -> None:
     audit_log.append(
         build_audit_event(
             actor_id=actor_id,

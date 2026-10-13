@@ -1,4 +1,4 @@
-﻿from pathlib import Path
+from pathlib import Path
 
 from fastapi.testclient import TestClient
 
@@ -39,7 +39,12 @@ def test_auth_and_access_flow() -> None:
 
     access = team_client.post(
         "/access/check",
-        json={"user_id": "USR-ORG-1", "action": "match:manage", "resource_type": "match", "resource_id": "MCH-OPEN-001"},
+        json={
+            "user_id": "USR-ORG-1",
+            "action": "match:manage",
+            "resource_type": "match",
+            "resource_id": "MCH-OPEN-001",
+        },
     )
     assert access.status_code == 200
     assert access.json()["allowed"] is True
@@ -122,4 +127,3 @@ def test_interaction_and_prediction_flow() -> None:
     )
     assert cheat.status_code == 200
     assert cheat.json()["suspected"] is True
-
