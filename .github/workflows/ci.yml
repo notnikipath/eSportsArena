@@ -1,4 +1,4 @@
-﻿name: eSports Arena CI
+name: eSports Arena CI
 on:
   push:
     branches: ["main", "master"]
@@ -28,4 +28,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Validate compose
-        run: docker compose config
+        run: |
+          cp .env.example .env
+          docker compose config --quiet
